@@ -8,19 +8,113 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  email      String    @unique
-  username   String?   @unique
-  firstName  String
-  lastName   String
-  password   String
-  isActive   Boolean   @default(true)
-  isVerified Boolean   @default(false)
-  lastLogin  DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String?  @unique
+  firstName String
+  lastName  String
+  password  String
+  isActive  Boolean  @default(true)
+  role      Role     @default(VENDEDOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([email])
-  @@index([isActive])
   @@map("users")
+}
+
+enum Role {
+  ADMIN
+  VENDEDOR
+}
+
+model CompanyConfig {
+  id Int @id @default(1)
+
+  legalName    String
+  cuit         String       @unique
+  ivaCondition IvaCondition
+
+  name       String?
+  address    String?
+  city       String?
+  province   String?
+  postalCode String?
+  phone      String?
+  email      String?
+  website    String?
+  logoUrl    String?
+
+  currency String @default("ARS")
+  timezone String @default("America/Argentina/Buenos_Aires")
+
+  receiptFooter String?
+  pointOfSale   Int?    @default(1)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("company_config")
+}
+
+model Tax {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  rate        Decimal  @db.Decimal(5, 4)
+  type        TaxType  @default(PERCENTAGE)
+  afipCode    String?
+  isActive    Boolean  @default(true)
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([isDefault])
+  @@map("taxes")
+}
+
+model PaymentMethod {
+  id            String            @id @default(cuid())
+  name          String
+  description   String?
+  type          PaymentMethodType
+  isActive      Boolean           @default(true)
+  isDefault     Boolean           @default(false)
+  requiresAuth  Boolean           @default(false)
+  processingFee Decimal?          @db.Decimal(5, 4)
+  feeType       PaymentFeeType?   @default(PERCENTAGE)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([type])
+  @@index([isActive])
+  @@index([isDefault])
+  @@map("payment_methods")
+}
+
+enum TaxType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+enum PaymentMethodType {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_TRANSFER
+  MERCADO_PAGO
+  DIGITAL_WALLET
+  CHECK
+  OTHER
+}
+
+enum PaymentFeeType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+enum IvaCondition {
+  RESPONSABLE_INSCRIPTO
+  MONOTRIBUTO
+  EXENTO
 }

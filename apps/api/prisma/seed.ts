@@ -6,84 +6,20 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding database...');
 
-  // Create default permissions
-  //const permissions = await createPermissions();
-
-  // Create default roles
-  //const adminRole = await createRoles(permissions);
-
   // Create default admin user
   await createDefaultUser();
 
   // Create company config
   //await createCompanyConfig();
 
-  // Create default system config
-  //await createSystemConfig();
+  // Create default taxes
+  await createDefaultTaxes();
+
+  // Create default payment methods
+  await createDefaultPaymentMethods();
 
   console.log('✅ Database seeded successfully!');
 }
-
-/* async function createPermissions() {
-  const modules = [
-    'users',
-    'roles',
-    'config',
-    'products',
-    'customers',
-    'sales',
-  ];
-  const actions = ['create', 'read', 'update', 'delete'];
-
-  for (const module of modules) {
-    for (const action of actions) {
-      await prisma.permission.upsert({
-        where: { name: `${module}.${action}` },
-        update: {},
-        create: {
-          name: `${module}.${action}`,
-          module,
-          action,
-          description: `${action.charAt(0).toUpperCase() + action.slice(1)} ${module}`,
-        },
-      });
-    }
-  }
-
-  return prisma.permission.findMany();
-} */
-
-/* async function createRoles(permissions: any[]) {
-  // Admin role with all permissions
-  const adminRole = await prisma.role.upsert({
-    where: { name: 'Administrador' },
-    update: {},
-    create: {
-      name: 'Administrador',
-      description: 'Acceso completo al sistema',
-      isDefault: false,
-    },
-  });
-
-  // Assign all permissions to admin
-  for (const permission of permissions) {
-    await prisma.rolePermission.upsert({
-      where: {
-        roleId_permissionId: {
-          roleId: adminRole.id,
-          permissionId: permission.id,
-        },
-      },
-      update: {},
-      create: {
-        roleId: adminRole.id,
-        permissionId: permission.id,
-      },
-    });
-  }
-
-  return adminRole;
-} */
 
 async function createDefaultUser() {
   const hashedPassword = await bcrypt.hash('admin123', 10);
@@ -94,64 +30,176 @@ async function createDefaultUser() {
     create: {
       email: 'admin@rmpos.com',
       firstName: 'Administrador',
-      username: 'Admin',
       lastName: 'Sistema',
+      username: 'admin',
       password: hashedPassword,
       isActive: true,
-      isVerified: true,
+      role: 'ADMIN',
     },
   });
+
+  console.log('👤 Default admin user created');
 }
 
 /* async function createCompanyConfig() {
   await prisma.companyConfig.upsert({
-    where: { cuit: '20123456789' },
+    where: { id: 1 },
     update: {},
     create: {
-      businessName: 'Mi Empresa S.A.',
-      tradeName: 'Mi Empresa',
-      cuit: '20123456789',
-      taxCondition: 'RESPONSABLE_INSCRIPTO',
-      address: 'Calle Falsa 123',
-      city: 'Ciudad Ejemplo',
-      province: 'Buenos Aires',
-      postalCode: '1234',
+      legalName: 'Mi Empresa S.A.',
+      cuit: '20-12345678-9',
+      ivaCondition: 'RESPONSABLE_INSCRIPTO',
+      name: 'Mi Empresa',
+      address: 'Av. Corrientes 1234',
+      city: 'Ciudad Autónoma de Buenos Aires',
+      province: 'CABA',
+      postalCode: 'C1043AAZ',
       phone: '+54 11 1234-5678',
       email: 'contacto@miempresa.com',
+      website: 'https://miempresa.com',
+      currency: 'ARS',
+      timezone: 'America/Argentina/Buenos_Aires',
+      receiptFooter: 'Gracias por su compra - www.miempresa.com',
+      pointOfSale: 1,
     },
   });
+
+  console.log('🏢 Company configuration created');
 } */
 
-/* async function createSystemConfig() {
-  const configs = [
-    { key: 'SYSTEM_NAME', value: 'AURA', description: 'Nombre del sistema' },
+async function createDefaultTaxes() {
+  const taxes = [
     {
-      key: 'SYSTEM_VERSION',
-      value: '1.0.0',
-      description: 'Versión del sistema',
+      name: 'IVA 21%',
+      description: 'Impuesto al Valor Agregado - Tasa General',
+      rate: 0.21,
+      type: 'PERCENTAGE' as const,
+      afipCode: '5',
+      isActive: true,
+      isDefault: true,
     },
     {
-      key: 'INVOICE_NEXT_NUMBER',
-      value: '1',
-      type: 'NUMBER',
-      description: 'Próximo número de factura',
+      name: 'IVA 10.5%',
+      description: 'Impuesto al Valor Agregado - Tasa Reducida',
+      rate: 0.105,
+      type: 'PERCENTAGE' as const,
+      afipCode: '4',
+      isActive: true,
+      isDefault: false,
     },
     {
-      key: 'DEFAULT_TAX_RATE',
-      value: '21.00',
-      type: 'NUMBER',
-      description: 'Tasa de IVA por defecto',
+      name: 'IVA 27%',
+      description: 'Impuesto al Valor Agregado - Tasa Adicional',
+      rate: 0.27,
+      type: 'PERCENTAGE' as const,
+      afipCode: '6',
+      isActive: true,
+      isDefault: false,
+    },
+    {
+      name: 'IVA 0%',
+      description: 'Impuesto al Valor Agregado - Exento',
+      rate: 0,
+      type: 'PERCENTAGE' as const,
+      afipCode: '3',
+      isActive: true,
+      isDefault: false,
     },
   ];
 
-  for (const config of configs) {
-    await prisma.systemConfig.upsert({
-      where: { key: config.key },
+  for (const tax of taxes) {
+    const existing = await prisma.tax.findFirst({
+      where: { name: tax.name },
+    });
+
+    await prisma.tax.upsert({
+      where: existing ? { id: existing.id } : { id: '___DUMMY___' },
       update: {},
-      create: config,
+      create: tax,
     });
   }
-} */
+
+  console.log('💰 Default taxes created');
+}
+
+async function createDefaultPaymentMethods() {
+  const paymentMethods = [
+    {
+      name: 'Efectivo',
+      description: 'Pago en efectivo',
+      type: 'CASH' as const,
+      isActive: true,
+      isDefault: true,
+      requiresAuth: false,
+      processingFee: null,
+      feeType: null,
+    },
+    {
+      name: 'Tarjeta de Débito',
+      description: 'Pago con tarjeta de débito',
+      type: 'DEBIT_CARD' as const,
+      isActive: true,
+      isDefault: false,
+      requiresAuth: false,
+      processingFee: 0.015,
+      feeType: 'PERCENTAGE' as const,
+    },
+    {
+      name: 'Tarjeta de Crédito',
+      description: 'Pago con tarjeta de crédito',
+      type: 'CREDIT_CARD' as const,
+      isActive: true,
+      isDefault: false,
+      requiresAuth: false,
+      processingFee: 0.025,
+      feeType: 'PERCENTAGE' as const,
+    },
+    {
+      name: 'Mercado Pago',
+      description: 'Pago con Mercado Pago',
+      type: 'MERCADO_PAGO' as const,
+      isActive: true,
+      isDefault: false,
+      requiresAuth: false,
+      processingFee: 0.0299,
+      feeType: 'PERCENTAGE' as const,
+    },
+    {
+      name: 'Transferencia Bancaria',
+      description: 'Transferencia bancaria',
+      type: 'BANK_TRANSFER' as const,
+      isActive: true,
+      isDefault: false,
+      requiresAuth: true,
+      processingFee: null,
+      feeType: null,
+    },
+    {
+      name: 'Billetera Digital',
+      description: 'Ualá, Brubank, etc.',
+      type: 'DIGITAL_WALLET' as const,
+      isActive: true,
+      isDefault: false,
+      requiresAuth: false,
+      processingFee: 0.02,
+      feeType: 'PERCENTAGE' as const,
+    },
+  ];
+
+  for (const method of paymentMethods) {
+    const existing = await prisma.paymentMethod.findFirst({
+      where: { name: method.name },
+    });
+
+    await prisma.paymentMethod.upsert({
+      where: existing ? { id: existing.id } : { id: '___DUMMY___' },
+      update: {},
+      create: method,
+    });
+  }
+
+  console.log('💳 Default payment methods created');
+}
 
 main()
   .catch((e) => {
