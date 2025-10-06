@@ -1,0 +1,13 @@
+{
+  "name": "@bksin/database",
+  "type": "module",
+  "scripts": {},
+  "devDependencies": {
+    "@bksin/typescript-config": "workspace:*",
+    "prisma": "^6.14.0",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@prisma/client": "6.14.0"
+  }
+}
