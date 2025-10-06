@@ -59,13 +59,13 @@ export const stepTwoSchema = z.object({
 
 export const stepThreeSchema = z.object({
   selectedTaxes: z
-    .array(z.string())
+    .array(z.number())
     .min(1, { message: "Debes seleccionar al menos un impuesto." }),
 });
 
 export const stepFourSchema = z.object({
   selectedPaymentMethods: z
-    .array(z.string())
+    .array(z.number())
     .min(1, { message: "Debes seleccionar al menos un método de pago." }),
 });
 

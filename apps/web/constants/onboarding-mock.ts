@@ -26,7 +26,7 @@ import {
 
 export const TAXES = [
   {
-    id: "1",
+    id: 1,
     name: "IVA 21%",
     description: "Impuesto al Valor Agregado",
     rate: 0.21,
@@ -36,7 +36,7 @@ export const TAXES = [
     isDefault: true,
   },
   {
-    id: "2",
+    id: 2,
     name: "IVA 10.5%",
     description: "IVA Reducido",
     rate: 0.105,
@@ -46,7 +46,7 @@ export const TAXES = [
     isDefault: false,
   },
   {
-    id: "3",
+    id: 3,
     name: "Percepción IIBB",
     description: "Percepción Ingresos Brutos",
     rate: 0.02,
@@ -59,7 +59,7 @@ export const TAXES = [
 
 export const PAYMENT_METHODS = [
   {
-    id: "1",
+    id: 1,
     name: "Efectivo",
     description: "Pago en efectivo",
     type: "CASH",
@@ -70,7 +70,7 @@ export const PAYMENT_METHODS = [
     feeType: null,
   },
   {
-    id: "2",
+    id: 2,
     name: "Tarjeta de Crédito",
     description: "Visa, Mastercard, etc.",
     type: "CREDIT_CARD",
@@ -81,7 +81,7 @@ export const PAYMENT_METHODS = [
     feeType: "PERCENTAGE",
   },
   {
-    id: "3",
+    id: 3,
     name: "Transferencia Bancaria",
     description: "Transferencia electrónica",
     type: "BANK_TRANSFER",
@@ -92,7 +92,7 @@ export const PAYMENT_METHODS = [
     feeType: "PERCENTAGE",
   },
   {
-    id: "4",
+    id: 4,
     name: "Mercado Pago",
     description: "Billetera digital",
     type: "MERCADO_PAGO",
