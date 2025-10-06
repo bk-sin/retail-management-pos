@@ -24,39 +24,6 @@ import {
   Landmark,
 } from "lucide-react";
 
-export const TAXES = [
-  {
-    id: 1,
-    name: "IVA 21%",
-    description: "Impuesto al Valor Agregado",
-    rate: 0.21,
-    type: "PERCENTAGE",
-    afipCode: "5",
-    isActive: true,
-    isDefault: true,
-  },
-  {
-    id: 2,
-    name: "IVA 10.5%",
-    description: "IVA Reducido",
-    rate: 0.105,
-    type: "PERCENTAGE",
-    afipCode: "4",
-    isActive: true,
-    isDefault: false,
-  },
-  {
-    id: 3,
-    name: "Percepción IIBB",
-    description: "Percepción Ingresos Brutos",
-    rate: 0.02,
-    type: "PERCENTAGE",
-    afipCode: "7",
-    isActive: true,
-    isDefault: false,
-  },
-];
-
 export const PAYMENT_METHODS = [
   {
     id: 1,

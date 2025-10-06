@@ -1,6 +1,6 @@
 import BusinessOnboardingForm from "@/components/onboarding/onboarding-form";
 
-const BusinessOnboardingPage = () => {
+const BusinessOnboardingPage = async () => {
   return <BusinessOnboardingForm />;
 };
 

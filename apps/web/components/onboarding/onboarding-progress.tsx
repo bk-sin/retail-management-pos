@@ -1,10 +1,11 @@
 import { ONBOARDING_STEPS } from "@/constants/onboarding-mock";
 import { Progress } from "../ui/progress";
-import useOnboardingStore from "./onboarding-store";
 import { useMemo } from "react";
+import { useAppSelector } from "@/lib/hooks";
+import { onboardingSelector } from "@/features/onboarding/onboardingSlice";
 
 export const OnboardingProgress = () => {
-  const { currentStep } = useOnboardingStore();
+  const { currentStep } = useAppSelector(onboardingSelector);
   const progress = useMemo(
     () => ((currentStep + 1) / ONBOARDING_STEPS.length) * 100,
     [currentStep]

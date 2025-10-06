@@ -9,13 +9,17 @@ import {
 } from "@/components/ui/form";
 import { Control } from "react-hook-form";
 import { OnboardingFormData } from "@/schemas/onboarding-schema";
-import { TAXES } from "@/constants/onboarding-mock";
+import { useGetTaxesQuery } from "@/features/taxes/taxes.api";
 
 export type TaxesStepProps = {
   control: Control<OnboardingFormData>;
 };
 
 export const TaxesStep = ({ control }: TaxesStepProps) => {
+  const { data: taxes, error, isLoading } = useGetTaxesQuery();
+
+  if (isLoading) return <div>Cargando impuestos...</div>;
+  if (error || !taxes) return <div>Error al cargar los impuestos.</div>;
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">
@@ -27,7 +31,7 @@ export const TaxesStep = ({ control }: TaxesStepProps) => {
         render={() => (
           <FormItem>
             <div className="grid gap-4">
-              {TAXES.map((tax) => (
+              {taxes.map((tax) => (
                 <FormField
                   key={tax.id}
                   control={control}
@@ -46,7 +50,7 @@ export const TaxesStep = ({ control }: TaxesStepProps) => {
                                 ? field.onChange([...field.value, tax.id])
                                 : field.onChange(
                                     field.value?.filter(
-                                      (value: string) => value !== tax.id
+                                      (value: number) => value !== tax.id
                                     )
                                   );
                             }}
@@ -65,8 +69,8 @@ export const TaxesStep = ({ control }: TaxesStepProps) => {
                             {tax.description}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            Tasa: {(tax.rate * 100).toFixed(2)}% | Código AFIP:{" "}
-                            {tax.afipCode}
+                            Tasa: {(Number(tax.rate) * 100).toFixed(2)}% |
+                            Código AFIP: {tax.afipCode}
                           </p>
                         </div>
                       </FormItem>

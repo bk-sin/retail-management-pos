@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/select";
 import { Control } from "react-hook-form";
 import { OnboardingFormData } from "@/schemas/onboarding-schema";
+import { IvaCondition } from "@bksin/database";
 
 export type LegalInfoStepProps = {
   control: Control<OnboardingFormData>;
 };
 
 export const LegalInfoStep = ({ control }: LegalInfoStepProps) => {
+  console.log(IvaCondition);
   return (
     <div className="space-y-6">
       <FormField
@@ -62,11 +64,14 @@ export const LegalInfoStep = ({ control }: LegalInfoStepProps) => {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="RESPONSABLE_INSCRIPTO">
-                  Responsable Inscripto
-                </SelectItem>
-                <SelectItem value="MONOTRIBUTO">Monotributo</SelectItem>
-                <SelectItem value="EXENTO">Exento</SelectItem>
+                {Object.values(IvaCondition).map((condition) => (
+                  <SelectItem key={condition} value={condition}>
+                    {condition
+                      .replace(/_/g, " ")
+                      .toLowerCase()
+                      .replace(/\b\w/g, (c) => c.toUpperCase())}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <FormMessage />

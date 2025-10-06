@@ -1,10 +1,16 @@
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "../ui/button";
-import useOnboardingStore from "./onboarding-store";
 import { UseFormReturn } from "react-hook-form";
 import { OnboardingFormData } from "@/schemas/onboarding-schema";
 import { ONBOARDING_STEPS, StepConfig } from "@/constants/onboarding-mock";
 import { useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import {
+  nextStep,
+  prevStep,
+  onboardingSelector,
+  updateData,
+} from "@/features/onboarding/onboardingSlice";
 
 type OnboardingNavigationProps = {
   form: UseFormReturn<OnboardingFormData>;
@@ -15,20 +21,26 @@ export const OnboardingNavigation = ({
   form,
   stepConfig,
 }: OnboardingNavigationProps) => {
-  const { currentStep, prevStep, updateData, nextStep } = useOnboardingStore();
+  const dispatch = useAppDispatch();
+  const { currentStep } = useAppSelector(onboardingSelector);
   const isSubmitting = form.formState.isSubmitting;
   const isLastStep = useMemo(
     () => currentStep === ONBOARDING_STEPS.length - 1,
     [currentStep]
   );
+
   const handleNext = async () => {
     const fieldsToValidate = stepConfig.fields || [];
     const isValid = await form.trigger(fieldsToValidate);
 
     if (isValid) {
-      updateData(form.getValues());
-      nextStep();
+      dispatch(updateData(form.getValues()));
+      dispatch(nextStep());
     }
+  };
+
+  const handlePrev = () => {
+    dispatch(prevStep());
   };
 
   return (
@@ -36,7 +48,7 @@ export const OnboardingNavigation = ({
       <Button
         type="button"
         variant="outline"
-        onClick={prevStep}
+        onClick={handlePrev}
         disabled={currentStep === 0}
       >
         <ArrowLeft className="mr-2 h-4 w-4" /> Anterior

@@ -1,15 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, CreditCard, FileText } from "lucide-react";
-import useOnboardingStore from "../onboarding-store";
-import {
-  IVA_CONDITIONS,
-  PAYMENT_METHODS,
-  TAXES,
-} from "@/constants/onboarding-mock";
+import { IVA_CONDITIONS } from "@/constants/onboarding-mock";
+import { useAppSelector } from "@/lib/hooks";
+import { onboardingSelector } from "@/features/onboarding/onboardingSlice";
+import { useGetTaxesQuery } from "@/features/taxes/taxes.api";
+import { useGetPaymentMethodsQuery } from "@/features/payment-methods/payment-methods.api";
 
 export const SummaryStep = () => {
-  const { data } = useOnboardingStore();
-  console.log(data.ivaCondition);
+  const { data } = useAppSelector(onboardingSelector);
+  const { data: taxes } = useGetTaxesQuery();
+  const { data: paymentMethods } = useGetPaymentMethodsQuery();
+  console.log("paymentMethods", paymentMethods);
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Resumen de Configuración</h3>
@@ -137,12 +138,12 @@ export const SummaryStep = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {data.selectedTaxes.map((taxId: string) => {
-              const tax = TAXES.find((t) => t.id === taxId);
+            {data.selectedTaxes.map((taxId: number) => {
+              const tax = taxes?.find((t) => t.id === taxId);
               return tax ? (
                 <div key={taxId} className="flex justify-between">
                   <span>{tax.name}</span>
-                  <span>{(tax.rate * 100).toFixed(2)}%</span>
+                  <span>{(Number(tax.rate) * 100).toFixed(2)}%</span>
                 </div>
               ) : null;
             })}
@@ -158,7 +159,7 @@ export const SummaryStep = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          {/*  <div className="space-y-2">
             {data.selectedPaymentMethods.map((methodId: string) => {
               const method = PAYMENT_METHODS.find((m) => m.id === methodId);
               return method ? (
@@ -172,7 +173,7 @@ export const SummaryStep = () => {
                 </div>
               ) : null;
             })}
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>

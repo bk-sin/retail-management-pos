@@ -1,4 +1,4 @@
-import { IVA_CONDITIONS } from "@/constants/onboarding-mock";
+import { IvaCondition } from "@bksin/database";
 import { z } from "zod";
 
 const isValidCuit = (cuit: string) => {
@@ -18,7 +18,17 @@ const isValidCuit = (cuit: string) => {
   const series = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
   let sum = 0;
   for (let i = 0; i < 10; i++) {
-    sum += cuitNumbers[i] * series[i];
+    if (
+      typeof cuitNumbers[i] === "number" &&
+      cuitNumbers[i] !== undefined &&
+      !isNaN(cuitNumbers[i] as number) &&
+      typeof series[i] === "number" &&
+      series[i] !== undefined
+    ) {
+      sum += cuitNumbers[i]! * series[i]!;
+    } else {
+      return false;
+    }
   }
   const rest = sum % 11;
   const digit = rest === 0 ? 0 : 11 - rest === 10 ? 9 : 11 - rest;
@@ -32,12 +42,9 @@ export const stepOneSchema = z.object({
     .string()
     .regex(/^\d{2}-\d{8}-\d{1}$/, "El formato debe ser XX-XXXXXXXX-X.")
     .refine(isValidCuit, { message: "El CUIT no es válido." }),
-  ivaCondition: z.enum(
-    IVA_CONDITIONS.map((cond) => cond.id),
-    {
-      message: "Debes seleccionar una condición de IVA.",
-    }
-  ),
+  ivaCondition: z.enum(Object.values(IvaCondition), {
+    message: "Debes seleccionar una condición de IVA.",
+  }),
 });
 
 export const stepTwoSchema = z.object({
