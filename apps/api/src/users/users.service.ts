@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs';
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@bksin/database';
 
 export type UserResponse = Prisma.UserGetPayload<{
   omit: { password: true };

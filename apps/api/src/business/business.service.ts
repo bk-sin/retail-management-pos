@@ -12,9 +12,7 @@ export class BusinessService {
       throw new Error('Company configuration already exists');
     }
     return await this.prisma.companyConfig.create({
-      data: {
-        ...createBusinessDto,
-      },
+      data: createBusinessDto,
     });
   }
 

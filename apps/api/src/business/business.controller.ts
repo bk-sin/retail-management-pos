@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { BusinessService } from './business.service';
-import { CreateBusinessDto } from './dto/create-business.dto';
 import { UpdateBusinessDto } from './dto/update-business.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { CreateBusinessDto } from './dto/create-business.dto';
 
 @ApiBearerAuth('jwt')
 @Controller('business')

@@ -1,31 +1,31 @@
-import { TaxSchema } from '@bksin/validators';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Tax } from '@bksin/database';
 
 @Injectable()
 export class TaxesService {
   constructor(private prisma: PrismaService) {}
 
-  getAllTaxes() {
+  async getAllTaxes(): Promise<Tax[]> {
     return this.prisma.tax.findMany();
   }
 
-  getTaxById(taxId: number) {
+  async getTaxById(taxId: number): Promise<Tax | null> {
     return this.prisma.tax.findUnique({ where: { id: taxId } });
   }
-
-  createTax(taxData: TaxSchema) {
+  /* 
+  async createTax(taxData: TaxSchema): Promise<Tax> {
     return this.prisma.tax.create({ data: taxData });
   }
 
-  updateTax(taxData: TaxSchema, taxId: number) {
+  async updateTax(taxData: TaxSchema, taxId: number): Promise<Tax> {
     return this.prisma.tax.update({
       where: { id: taxId },
       data: taxData,
     });
-  }
+  } */
 
-  deleteTax(taxId: number) {
+  async deleteTax(taxId: number): Promise<Tax> {
     return this.prisma.tax.delete({ where: { id: taxId } });
   }
 }

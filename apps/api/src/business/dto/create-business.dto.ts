@@ -1,4 +1,4 @@
-import { IvaCondition } from '@prisma/client';
+import { IvaCondition } from '@bksin/database';
 
 export class CreateBusinessDto {
   legalName: string;
