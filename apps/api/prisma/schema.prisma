@@ -39,8 +39,8 @@ model CompanyConfig {
   city       String?
   province   String?
   postalCode String?
-  phone      String?
-  email      String?
+  phone      String
+  email      String
   website    String?
   logoUrl    String?
 
@@ -49,6 +49,9 @@ model CompanyConfig {
 
   receiptFooter String?
   pointOfSale   Int?    @default(1)
+
+  selectedTaxes         Int[]
+  selectedPaymentMethods Int[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -57,8 +60,8 @@ model CompanyConfig {
 }
 
 model Tax {
-  id          String   @id @default(cuid())
-  name        String
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
   description String?
   rate        Decimal  @db.Decimal(5, 4)
   type        TaxType  @default(PERCENTAGE)
@@ -74,8 +77,8 @@ model Tax {
 }
 
 model PaymentMethod {
-  id            String            @id @default(cuid())
-  name          String
+  id            Int               @id @default(autoincrement())
+  name          String            @unique
   description   String?
   type          PaymentMethodType
   isActive      Boolean           @default(true)

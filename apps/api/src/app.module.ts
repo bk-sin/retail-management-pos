@@ -5,8 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { TrpcController } from './trpc/trpc.controller';
 import { AppController } from './app.controller';
+import { BusinessModule } from './business/business.module';
+import { TaxesModule } from './taxes/taxes.module';
 
 @Module({
   imports: [
@@ -16,8 +17,10 @@ import { AppController } from './app.controller';
     PrismaModule,
     UsersModule,
     AuthModule,
+    BusinessModule,
+    TaxesModule,
   ],
-  controllers: [TrpcController, AppController],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,

@@ -108,12 +108,8 @@ async function createDefaultTaxes() {
   ];
 
   for (const tax of taxes) {
-    const existing = await prisma.tax.findFirst({
-      where: { name: tax.name },
-    });
-
     await prisma.tax.upsert({
-      where: existing ? { id: existing.id } : { id: '___DUMMY___' },
+      where: { name: tax.name },
       update: {},
       create: tax,
     });
@@ -187,12 +183,8 @@ async function createDefaultPaymentMethods() {
   ];
 
   for (const method of paymentMethods) {
-    const existing = await prisma.paymentMethod.findFirst({
-      where: { name: method.name },
-    });
-
     await prisma.paymentMethod.upsert({
-      where: existing ? { id: existing.id } : { id: '___DUMMY___' },
+      where: { name: method.name },
       update: {},
       create: method,
     });

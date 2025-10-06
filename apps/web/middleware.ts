@@ -29,13 +29,34 @@ export async function middleware(request: NextRequest) {
 
     if (!configChecked) {
       try {
-        const response = await fetch(`${process.env.API_URL}/company-config`, {
+        const response = await fetch(`${process.env.API_URL}/business`, {
           headers: {
             "Content-Type": "application/json",
           },
         });
-
+        console.log("Business config check response status:", response.status);
         if (!response.ok || response.status === 404) {
+          return NextResponse.redirect(new URL("/onboarding", request.url));
+        }
+
+        let businessPayload: unknown;
+        try {
+          businessPayload = await response.json();
+        } catch (jsonError) {
+          console.error("Failed to parse business config response:", jsonError);
+          return NextResponse.redirect(new URL("/onboarding", request.url));
+        }
+
+        const businessList = Array.isArray(businessPayload)
+          ? businessPayload
+          : typeof businessPayload === "object" &&
+              businessPayload !== null &&
+              "data" in businessPayload &&
+              Array.isArray((businessPayload as { data?: unknown }).data)
+            ? (businessPayload as { data: unknown[] }).data
+            : null;
+
+        if (!businessList || businessList.length === 0) {
           return NextResponse.redirect(new URL("/onboarding", request.url));
         }
 
