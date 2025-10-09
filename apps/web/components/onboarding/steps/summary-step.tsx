@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, CreditCard, FileText } from "lucide-react";
-import { IVA_CONDITIONS } from "@/constants/onboarding-mock";
 import { useAppSelector } from "@/lib/hooks";
-import { onboardingSelector } from "@/features/onboarding/onboardingSlice";
+import { onboardingSelector } from "@/features/onboarding/onboarding.slice";
 import { useGetTaxesQuery } from "@/features/taxes/taxes.api";
 import { useGetPaymentMethodsQuery } from "@/features/payment-methods/payment-methods.api";
+import { IvaCondition, TaxType } from "@bksin/database";
 
 export const SummaryStep = () => {
   const { data } = useAppSelector(onboardingSelector);
@@ -40,10 +40,9 @@ export const SummaryStep = () => {
               <div className="md:col-span-2">
                 <strong className="text-sm font-medium">Condición IVA:</strong>
                 <p className="text-sm mt-1">
-                  {
-                    IVA_CONDITIONS.find((cond) => cond.id === data.ivaCondition)
-                      ?.label
-                  }
+                  {Object.values(IvaCondition).find(
+                    (cond) => cond === data.ivaCondition
+                  )}
                 </p>
               </div>
               {data.name && (
@@ -159,21 +158,27 @@ export const SummaryStep = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {/*  <div className="space-y-2">
-            {data.selectedPaymentMethods.map((methodId: string) => {
-              const method = PAYMENT_METHODS.find((m) => m.id === methodId);
+          <div className="space-y-2">
+            {data.selectedPaymentMethods.map((methodId: number) => {
+              const method = paymentMethods?.find((m) => m.id === methodId);
               return method ? (
                 <div key={methodId} className="flex justify-between">
                   <span>{method.name}</span>
-                  {method.processingFee && (
+                  {method.feeType === TaxType.PERCENTAGE && (
                     <span className="text-sm text-muted-foreground">
-                      {(method.processingFee * 100).toFixed(2)}% comisión
+                      {(Number(method.processingFee) * 100).toFixed(2)}%
+                      comisión
+                    </span>
+                  )}
+                  {method.feeType === TaxType.FIXED_AMOUNT && (
+                    <span className="text-sm text-muted-foreground">
+                      {(Number(method.processingFee) * 100).toFixed(2)} comisión
                     </span>
                   )}
                 </div>
               ) : null;
             })}
-          </div> */}
+          </div>
         </CardContent>
       </Card>
     </div>

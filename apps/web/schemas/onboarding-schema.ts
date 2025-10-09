@@ -48,19 +48,18 @@ export const stepOneSchema = z.object({
 });
 
 export const stepTwoSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().nullable(),
   phone: z
     .string()
     .min(8, { message: "El teléfono debe tener al menos 8 dígitos." }),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  province: z.string().optional(),
-  postalCode: z.string().optional(),
+  address: z.string().nullable(),
+  city: z.string().nullable(),
+  province: z.string().nullable(),
+  postalCode: z.string().nullable(),
   email: z.string().email({ message: "El email no es válido." }),
   website: z
     .string()
     .url({ message: "La URL no es válida." })
-    .optional()
     .or(z.literal("")),
 });
 

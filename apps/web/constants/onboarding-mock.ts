@@ -24,59 +24,6 @@ import {
   Landmark,
 } from "lucide-react";
 
-export const PAYMENT_METHODS = [
-  {
-    id: 1,
-    name: "Efectivo",
-    description: "Pago en efectivo",
-    type: "CASH",
-    isActive: true,
-    isDefault: true,
-    requiresAuth: false,
-    processingFee: null,
-    feeType: null,
-  },
-  {
-    id: 2,
-    name: "Tarjeta de Crédito",
-    description: "Visa, Mastercard, etc.",
-    type: "CREDIT_CARD",
-    isActive: true,
-    isDefault: false,
-    requiresAuth: true,
-    processingFee: 0.035,
-    feeType: "PERCENTAGE",
-  },
-  {
-    id: 3,
-    name: "Transferencia Bancaria",
-    description: "Transferencia electrónica",
-    type: "BANK_TRANSFER",
-    isActive: true,
-    isDefault: false,
-    requiresAuth: false,
-    processingFee: 0.005,
-    feeType: "PERCENTAGE",
-  },
-  {
-    id: 4,
-    name: "Mercado Pago",
-    description: "Billetera digital",
-    type: "MERCADO_PAGO",
-    isActive: true,
-    isDefault: false,
-    requiresAuth: true,
-    processingFee: 0.045,
-    feeType: "PERCENTAGE",
-  },
-];
-
-export const IVA_CONDITIONS = [
-  { id: "RESPONSABLE_INSCRIPTO", label: "Responsable Inscripto" },
-  { id: "MONOTRIBUTO", label: "Monotributo" },
-  { id: "EXENTO", label: "Exento" },
-];
-
 export interface StepConfig {
   id: number;
   title: string;

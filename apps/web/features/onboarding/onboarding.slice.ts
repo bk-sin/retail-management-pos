@@ -7,11 +7,16 @@ const getDefaultData = (): OnboardingFormData => ({
   legalName: "",
   cuit: "",
   ivaCondition: IvaCondition.RESPONSABLE_INSCRIPTO,
-  address: "",
+  name: null,
+  address: null,
+  city: null,
+  province: null,
+  postalCode: null,
   phone: "",
   email: "",
-  selectedTaxes: [1],
-  selectedPaymentMethods: [1],
+  website: "",
+  selectedTaxes: [],
+  selectedPaymentMethods: [],
 });
 
 export interface OnboardingState {

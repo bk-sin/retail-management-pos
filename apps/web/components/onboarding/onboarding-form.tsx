@@ -24,13 +24,15 @@ import {
   goToStep as goToStepAction,
   onboardingSelector,
   updateData as updateDataAction,
-} from "@/features/onboarding/onboardingSlice";
+} from "@/features/onboarding/onboarding.slice";
+import { useCreateCompanyConfigMutation } from "@/features/business/business.api";
 
 export default function BusinessOnboardingForm() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { currentStep, data } = useAppSelector(onboardingSelector);
   const stepConfig = ONBOARDING_STEPS[currentStep];
+  const [createCompanyConfig] = useCreateCompanyConfigMutation();
 
   const form = useForm<OnboardingFormData>({
     resolver: zodResolver(onboardingSchema),
@@ -41,6 +43,16 @@ export default function BusinessOnboardingForm() {
     try {
       console.log("Finalizando configuración:", formData);
       dispatch(updateDataAction(formData));
+      const data = {
+        ...formData,
+        logoUrl: null,
+        currency: "ARS",
+        timezone: "Buenos Aires",
+        receiptFooter: null,
+        pointOfSale: 0,
+        website: formData.website || null,
+      };
+      createCompanyConfig(data);
       await new Promise((resolve) => setTimeout(resolve, 1500));
       router.push("/dashboard");
     } catch (error) {

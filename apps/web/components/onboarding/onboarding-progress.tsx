@@ -2,7 +2,7 @@ import { ONBOARDING_STEPS } from "@/constants/onboarding-mock";
 import { Progress } from "../ui/progress";
 import { useMemo } from "react";
 import { useAppSelector } from "@/lib/hooks";
-import { onboardingSelector } from "@/features/onboarding/onboardingSlice";
+import { onboardingSelector } from "@/features/onboarding/onboarding.slice";
 
 export const OnboardingProgress = () => {
   const { currentStep } = useAppSelector(onboardingSelector);

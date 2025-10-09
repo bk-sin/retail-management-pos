@@ -10,7 +10,7 @@ import {
   prevStep,
   onboardingSelector,
   updateData,
-} from "@/features/onboarding/onboardingSlice";
+} from "@/features/onboarding/onboarding.slice";
 
 type OnboardingNavigationProps = {
   form: UseFormReturn<OnboardingFormData>;

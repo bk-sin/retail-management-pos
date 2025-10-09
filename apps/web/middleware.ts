@@ -25,64 +25,40 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    const configChecked = request.cookies.get("config_checked")?.value;
+    const apiUrl = process.env.API_URL || "http://localhost:4000";
 
-    if (!configChecked) {
-      try {
-        const response = await fetch(`${process.env.API_URL}/business`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        console.log("Business config check response status:", response.status);
-        if (!response.ok || response.status === 404) {
+    try {
+      const response = await fetch(`${apiUrl}/business`, {
+        headers: {
+          Cookie: `auth_token=${token}`,
+        },
+        cache: "no-store",
+      });
+
+      if (response.ok) {
+        const configs = await response.json();
+
+        if (!configs || (Array.isArray(configs) && configs.length === 0)) {
           return NextResponse.redirect(new URL("/onboarding", request.url));
         }
 
-        let businessPayload: unknown;
-        try {
-          businessPayload = await response.json();
-        } catch (jsonError) {
-          console.error("Failed to parse business config response:", jsonError);
-          return NextResponse.redirect(new URL("/onboarding", request.url));
-        }
-
-        const businessList = Array.isArray(businessPayload)
-          ? businessPayload
-          : typeof businessPayload === "object" &&
-              businessPayload !== null &&
-              "data" in businessPayload &&
-              Array.isArray((businessPayload as { data?: unknown }).data)
-            ? (businessPayload as { data: unknown[] }).data
-            : null;
-
-        if (!businessList || businessList.length === 0) {
-          return NextResponse.redirect(new URL("/onboarding", request.url));
-        }
-
-        const nextResponse = NextResponse.next();
-        nextResponse.cookies.set("config_checked", "true", {
-          maxAge: 300,
-          httpOnly: true,
-        });
-        return nextResponse;
-      } catch (error) {
-        console.error("Error checking business config:", error);
+        return NextResponse.next();
+      } else {
         return NextResponse.redirect(new URL("/onboarding", request.url));
       }
+    } catch (fetchError) {
+      console.error("Error checking business config:", fetchError);
+      return NextResponse.redirect(new URL("/onboarding", request.url));
     }
-
-    return NextResponse.next();
   } catch (error) {
     console.error("Token validation failed:", error);
     const response = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.delete("auth_token");
     response.cookies.delete("user_info");
-    response.cookies.delete("config_checked");
     return response;
   }
 }
 
 export const config = {
-  matcher: ["/", "/dashboard/:path*", "/profile", "/onboarding"],
+  matcher: ["/", "/dashboard/:path*", "/profile/:path*", "/onboarding"],
 };

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { CreateBusinessDto } from './dto/create-business.dto';
 import { UpdateBusinessDto } from './dto/update-business.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class BusinessService {
@@ -9,7 +9,7 @@ export class BusinessService {
   async create(createBusinessDto: CreateBusinessDto) {
     const existing = await this.prisma.companyConfig.findFirst();
     if (existing) {
-      throw new Error('Company configuration already exists');
+      throw new ConflictException('Company configuration already exists');
     }
     return await this.prisma.companyConfig.create({
       data: createBusinessDto,

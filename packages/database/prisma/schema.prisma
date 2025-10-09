@@ -44,7 +44,7 @@ model CompanyConfig {
   website    String?
   logoUrl    String?
 
-  currency String @default("ARS")
+  currency String? @default("ARS")
   timezone String @default("America/Argentina/Buenos_Aires")
 
   receiptFooter String?
@@ -94,6 +94,7 @@ model PaymentMethod {
   @@index([isDefault])
   @@map("payment_methods")
 }
+
 
 enum TaxType {
   PERCENTAGE
