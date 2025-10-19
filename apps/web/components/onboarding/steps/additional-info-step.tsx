@@ -24,7 +24,11 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
             <FormItem>
               <FormLabel>Nombre Comercial</FormLabel>
               <FormControl>
-                <Input placeholder="Ej: Mi Tienda" {...field} />
+                <Input
+                  placeholder="Ej: Mi Tienda"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -37,7 +41,11 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
             <FormItem>
               <FormLabel>Teléfono</FormLabel>
               <FormControl>
-                <Input placeholder="Ej: +54 11 1234-5678" {...field} />
+                <Input
+                  placeholder="Ej: +54 11 1234-5678"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -51,7 +59,11 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
           <FormItem>
             <FormLabel>Dirección</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: Av. Corrientes 1234" {...field} />
+              <Input
+                placeholder="Ej: Av. Corrientes 1234"
+                {...field}
+                value={field.value ?? ""}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -65,7 +77,11 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
             <FormItem>
               <FormLabel>Ciudad</FormLabel>
               <FormControl>
-                <Input placeholder="Ej: Buenos Aires" {...field} />
+                <Input
+                  placeholder="Ej: Buenos Aires"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,7 +94,11 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
             <FormItem>
               <FormLabel>Provincia</FormLabel>
               <FormControl>
-                <Input placeholder="Ej: CABA" {...field} />
+                <Input
+                  placeholder="Ej: CABA"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -91,7 +111,11 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
             <FormItem>
               <FormLabel>Código Postal</FormLabel>
               <FormControl>
-                <Input placeholder="Ej: C1043" {...field} />
+                <Input
+                  placeholder="Ej: C1043"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -110,6 +134,7 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
                   type="email"
                   placeholder="Ej: contacto@miempresa.com"
                   {...field}
+                  value={field.value ?? ""}
                 />
               </FormControl>
               <FormMessage />
@@ -121,9 +146,12 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
           name="website"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sitio Web</FormLabel>
               <FormControl>
-                <Input placeholder="Ej: www.miempresa.com" {...field} />
+                <Input
+                  placeholder="Ej: www.miempresa.com"
+                  {...field}
+                  value={field.value ?? ""}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

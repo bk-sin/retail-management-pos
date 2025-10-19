@@ -3,9 +3,9 @@ import { PrismaClient } from '@bksin/database';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
-    const databaseUrl = process.env.DATABASE_URL;
+    const databaseUrl = process.env.DB_URL;
     if (!databaseUrl) {
-      throw new Error('DATABASE_URL is not defined in environment variables');
+      throw new Error('DB_URL is not defined in environment variables');
     }
 
     super({

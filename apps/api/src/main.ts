@@ -31,13 +31,17 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'http://web:3000',
+      process.env.FRONTEND_URL || 'http://localhost:3000',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 
   SwaggerModule.setup('api-docs', app, document);
 
-  await app.listen(process.env.PORT ?? 4000);
+  await app.listen(process.env.BACKEND_PORT ?? 4000);
 }
 void bootstrap();

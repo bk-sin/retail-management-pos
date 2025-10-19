@@ -1,0 +1,81 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: retail_pos_dev_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - db_dev_data:/var/lib/postgresql/data
+    networks:
+      - dev-network
+
+  api:
+    image: node:20-alpine
+    container_name: retail_pos_dev_api
+    working_dir: /app
+    command: sh -c "npm install -g pnpm && pnpm install && cd packages/database && pnpm db:generate && pnpm db:push && cd ../.. && pnpm --filter api dev"
+    ports:
+      - "${BACKEND_PORT:-4000}:${BACKEND_PORT:-4000}"
+      - "9229:9229"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/apps/api/node_modules
+      - /app/apps/web/node_modules
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - dev-network
+
+  web:
+    image: node:20-alpine
+    container_name: retail_pos_dev_web
+    working_dir: /app
+    command: sh -c "npm install -g pnpm && pnpm install && cd packages/database && pnpm db:generate && cd ../.. && pnpm --filter web dev"
+    ports:
+      - "${FRONTEND_PORT:-3000}:${FRONTEND_PORT:-3000}"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/apps/web/node_modules
+      - /app/apps/web/.next
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    depends_on:
+      - api
+    networks:
+      - dev-network
+
+  prisma-studio:
+    image: node:20-alpine
+    container_name: retail_pos_dev_studio
+    working_dir: /app
+    command: sh -c "npm install -g pnpm && pnpm install && npx prisma studio --schema ./packages/database/prisma/schema.prisma --port 5555 --browser none"
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - dev-network
+
+networks:
+  dev-network:
+    name: dev-network
+
+volumes:
+  db_dev_data:
