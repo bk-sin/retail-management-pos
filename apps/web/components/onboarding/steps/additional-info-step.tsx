@@ -146,6 +146,7 @@ export const AdditionalInfoStep = ({ control }: AdditionalInfoStepProps) => {
           name="website"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Página web</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Ej: www.miempresa.com"

@@ -1,0 +1,20 @@
+{
+  "validCompany": {
+    "legalName": "Empresa de Pruebas S.A.",
+    "cuit": "20-40229158-4",
+    "ivaCondition": "RESPONSABLE_INSCRIPTO",
+    "name": "Tienda de Pruebas",
+    "phone": "1123456789",
+    "email": "pruebas@empresa.com",
+    "website": "https://empresa.com",
+    "address": "Av. Corrientes 1234",
+    "city": "Buenos Aires",
+    "province": "CABA",
+    "postalCode": "1043"
+  },
+  "invalidCompany": {
+    "legalName": "",
+    "cuit": "invalid",
+    "ivaCondition": ""
+  }
+}

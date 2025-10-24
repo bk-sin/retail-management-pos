@@ -10,7 +10,6 @@ export const SummaryStep = () => {
   const { data } = useAppSelector(onboardingSelector);
   const { data: taxes } = useGetTaxesQuery();
   const { data: paymentMethods } = useGetPaymentMethodsQuery();
-  console.log("paymentMethods", paymentMethods);
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Resumen de Configuración</h3>

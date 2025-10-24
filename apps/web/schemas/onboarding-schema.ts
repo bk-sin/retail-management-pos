@@ -48,19 +48,19 @@ export const stepOneSchema = z.object({
 });
 
 export const stepTwoSchema = z.object({
-  name: z.string().nullable(),
+  name: z
+    .string()
+    .min(3, { message: "El nombre tiene que tener al menos 3 caracteres." })
+    .nonempty("El nombre es obligatorio."),
   phone: z
     .string()
     .min(8, { message: "El teléfono debe tener al menos 8 dígitos." }),
-  address: z.string().nullable(),
-  city: z.string().nullable(),
-  province: z.string().nullable(),
-  postalCode: z.string().nullable(),
+  address: z.string(),
+  city: z.string(),
+  province: z.string(),
+  postalCode: z.string(),
   email: z.string().email({ message: "El email no es válido." }),
-  website: z
-    .string()
-    .url({ message: "La URL no es válida." })
-    .or(z.literal("")),
+  website: z.string(),
 });
 
 export const stepThreeSchema = z.object({

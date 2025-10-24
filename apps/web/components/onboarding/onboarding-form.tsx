@@ -45,19 +45,22 @@ export default function BusinessOnboardingForm() {
       dispatch(updateDataAction(formData));
       const data = {
         ...formData,
+        name: formData.name || "",
+        address: formData.address || "",
+        city: formData.city || "",
+        province: formData.province || "",
+        postalCode: formData.postalCode || "",
+        website: formData.website || "",
         logoUrl: null,
         currency: "ARS",
         timezone: "Buenos Aires",
         receiptFooter: null,
         pointOfSale: 0,
-        website: formData.website || null,
       };
-      createCompanyConfig(data);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await createCompanyConfig(data).unwrap();
       router.push("/dashboard");
     } catch (error) {
       console.error("Error al finalizar:", error);
-    } finally {
     }
   };
 
@@ -89,7 +92,20 @@ export default function BusinessOnboardingForm() {
         <OnboardingHeader currentStep={currentStep} onStepClick={goToStep} />
         <OnboardingProgress />
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const isLastStep = currentStep === ONBOARDING_STEPS.length - 1;
+              if (isLastStep) {
+                form.handleSubmit(onSubmit)(e);
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+              }
+            }}
+          >
             <Card className="mb-8">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">

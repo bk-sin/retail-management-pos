@@ -45,7 +45,22 @@ export const LegalInfoStep = ({ control }: LegalInfoStepProps) => {
           <FormItem>
             <FormLabel>CUIT *</FormLabel>
             <FormControl>
-              <Input placeholder="Ej: 20-12345678-9" {...field} />
+              <Input
+                placeholder="Ej: 20-12345678-9"
+                {...field}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "");
+                  const limited = value.slice(0, 11);
+                  let formatted = limited;
+                  if (limited.length > 2) {
+                    formatted = `${limited.slice(0, 2)}-${limited.slice(2)}`;
+                  }
+                  if (limited.length > 10) {
+                    formatted = `${limited.slice(0, 2)}-${limited.slice(2, 10)}-${limited.slice(10)}`;
+                  }
+                  field.onChange(formatted);
+                }}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

@@ -43,6 +43,20 @@ export const OnboardingNavigation = ({
     dispatch(prevStep());
   };
 
+  const handleFinish = async () => {
+    const isValid = await form.trigger();
+    if (isValid) {
+      const submitEvent = new Event("submit", {
+        bubbles: true,
+        cancelable: true,
+      });
+      const formElement = document.querySelector("form");
+      if (formElement) {
+        formElement.dispatchEvent(submitEvent);
+      }
+    }
+  };
+
   return (
     <div className="flex justify-between">
       <Button
@@ -54,7 +68,7 @@ export const OnboardingNavigation = ({
         <ArrowLeft className="mr-2 h-4 w-4" /> Anterior
       </Button>
       {isLastStep ? (
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="button" disabled={isSubmitting} onClick={handleFinish}>
           <CheckCircle className="mr-2 h-4 w-4" />
           {isSubmitting ? "Finalizando..." : "Finalizar Configuración"}
         </Button>
