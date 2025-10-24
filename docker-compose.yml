@@ -92,8 +92,31 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  backup:
+    image: alpine:3.20
+    container_name: retail_management_pos_backup
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - ./backups:/backups
+      - ./entrypoint-backups.sh:/entrypoint-backups.sh:ro
+    networks:
+      - prisma-network
+    entrypoint: ["/bin/sh", "/entrypoint-backups.sh"]
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
 networks:
   prisma-network:
 
 volumes:
   db_data:
+  backup_data:
